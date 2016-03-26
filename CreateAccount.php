@@ -1,13 +1,19 @@
 <?php 
- mysql_connect("localhost", "root", "root"); // Connesion à la base de données
- mysql_select_db("bdd"); // Sélection de la base de données
+
+
+$mysqli = new mysqli("localhost", "root", "root", "bdd");
+
+if ($mysqli->connect_errno) {
+    printf("Échec de la connexion : %s\n", $mysqli->connect_error);
+    exit();
+}
 
  $Login = $_POST['login']; 
 
  $Password = $_POST['pw1']; 
  
  // Insertion d'un enregistrement dans la table livre
- mysql_query ("INSERT INTO Users (Login,Password) VALUES ('$Login', '$Password')");
+$mysqli->query("INSERT INTO Users (Login,Password) VALUES ('$Login', '$Password')");
   
- mysql_close(); // On oubli pas de déconnecter la base de données
+ $mysqli->close(); // On oubli pas de déconnecter la base de données
 ?>
