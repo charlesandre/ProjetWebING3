@@ -3,7 +3,7 @@
 // Vérification des identifiants
 
 
-$mysqli = new mysqli("localhost", "root", "root", "bdd");
+$mysqli = new PDO("localhost", "root", "root", "bdd");
 
 if ($mysqli->connect_errno) {
     printf("Échec de la connexion : %s\n", $mysqli->connect_error);
@@ -11,24 +11,26 @@ if ($mysqli->connect_errno) {
 }
 
 
- $Login = $_POST['login']; 
+ $Log = $_POST['login']; 
 
  $Password = $_POST['pw1']; 
 
+ echo "tentative de connexion avec login : ";
+ echo $Log;
+ echo " et mot de passe : ";
+ echo $Password;
 
-$result = $mysqli->query("SELECT ID FROM Users WHERE (Login = 'Login')");
 
-
-
-if (!$result)
-{
-    echo 'Mauvais identifiant ou mot de passe !';
-}
+$requser = $mysqli->prepare("SELECT * FROM Users WHERE Login = ? AND Password = ?");
+$requser->execute(array($Log, $Password));
+$userexist = $requser->rowCount();
+if($userexist == 1)
+	{
+		echo "oklm";
+	}
 else
-{
-    session_start();
-    $_SESSION['ID'] = $resultat['ID'];
-    $_SESSION['Login'] = $pseudo;
-    echo 'Vous êtes connecté !';
-}
+	{
+		echo "Mauvais mail ou mot de passe";
+	} 
+
 ?>
