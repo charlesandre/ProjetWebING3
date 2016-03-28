@@ -32,7 +32,7 @@
 				$row = mysql_fetch_row($result);
 				$_SESSION['ID'] = $row[0];
 				$_SESSION['Login'] = $row[1];
-				header('Location: test.php');
+				header('Location: home.php?id='.$_SESSION['ID']);
 
 			}	
 			else
