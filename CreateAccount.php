@@ -1,5 +1,5 @@
-
 <?php 
+@ob_start();
 	
 	$bdd = mysql_connect('localhost', 'root', 'root');
 	if (!$bdd) 
@@ -30,7 +30,8 @@
              VALUES ('$login', '$pw1')");
 				if($result)
 				{
-				$erreur = "Votre compte a été créé";
+					header('Location: Connexion.php');
+					exit;
 				}
 				
 				
@@ -64,9 +65,10 @@
 	
 
 	<div align="center">
-		<h1>Inscription</h1>
+		
 		<br/>
-				<form method="post" action ="" align ="center">
+		<form method="post" action ="" align ="center">
+			<h1>Inscription</h1>
 			<br/>
 			<table align ="center">
 				<tr>

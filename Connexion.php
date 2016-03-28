@@ -1,36 +1,123 @@
 <?php 
-// Hachage du mot de passe
-// Vérification des identifiants
+@ob_start();
+
+	session_start();	
+
+	$bdd = mysql_connect('localhost', 'root', 'root');
+	if (!$bdd) 
+		{
+    die('Not connected : ' . mysql_error());
+		}
+
+	$db_selected = mysql_select_db('bdd', $bdd);
+	if (!$db_selected) 
+		{
+    die ('Can\'t use foo : ' . mysql_error());
+		}
 
 
-$mysqli = new PDO("localhost", "root", "root", "bdd");
-
-if ($mysqli->connect_errno) {
-    printf("Échec de la connexion : %s\n", $mysqli->connect_error);
-    exit();
-}
-
-
- $Log = $_POST['login']; 
-
- $Password = $_POST['pw1']; 
-
- echo "tentative de connexion avec login : ";
- echo $Log;
- echo " et mot de passe : ";
- echo $Password;
-
-
-$requser = $mysqli->prepare("SELECT * FROM Users WHERE Login = ? AND Password = ?");
-$requser->execute(array($Log, $Password));
-$userexist = $requser->rowCount();
-if($userexist == 1)
+	if (isset($_POST['formconnect']))
 	{
-		echo "oklm";
+		if(!empty($_POST['log']) AND !empty($_POST['pass']))
+		{
+			$login=$_POST['log'];
+			$pass=$_POST['pass'];
+
+
+			$result = mysql_query("SELECT * FROM Users WHERE Login = '$login' AND Password = '$pass'");
+			$num_rows = mysql_num_rows($result);
+
+			if($num_rows ==1)
+			{
+				$row = mysql_fetch_row($result);
+				$_SESSION['ID'] = $row[0];
+				$_SESSION['Login'] = $row[1];
+				header('Location: test.php');
+
+			}	
+			else
+			{
+				$erreur = "Bad login or password";
+			}		
+		}	
+		else
+		{
+			$erreur = "All fields must be completed";
+		}
+		
+		
 	}
-else
-	{
-		echo "Mauvais mail ou mot de passe";
-	} 
+ 
 
 ?>
+
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Index</title>
+		<link rel="stylesheet" href="style.css" />
+		
+	</head>
+
+
+	<body>
+	
+
+	<div align="center">
+		
+		<br/>
+		<form method="post" action ="" align ="center">
+			<h1>Connexion</h1>
+			<table align ="center">
+				<tr>
+					<td>
+						<label for "login"> Login : </label>
+					</td>
+					<td>
+						<input id ="login" type="text" name="log" placeholder="Your Login" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<label for "pass"> Password : </label>
+					</td>
+					<td>
+						<input id ="pass" type="password" name="pass" placeholder="Your Password" />
+					</td>
+				</tr>
+			</table>
+				<br/>
+				<input type = "submit" name="formconnect" value="Connect !"> </input> 
+				<br/><br/>
+				<?php
+			if(isset($erreur))
+			{
+				echo '<font color = "red">'.$erreur. "</font>";
+			}
+			
+			?> <br/>
+			<a href="">Forgot your password ? </a> <p/>
+			<a href="CreateAccount.php">Register</a>
+
+		</form>
+		
+
+	</div>
+
+		
+		
+
+	<div id="container">
+			</div>
+
+	<div id="bottom">
+		Charles ANDRE - Antoine DIOULOUFFET - Alexandre TUBIANA - ECE PARIS - 2016
+	</div>
+
+	</body>
+
+</html>
+
+
